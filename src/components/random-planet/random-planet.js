@@ -1,29 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import SwapiService from '../../services/swapi-service';
 import './random-planet.css';
+import Spinner from '../spinner';
 
 export default function RandomPlanet() {
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [population, setPopulation] = useState("");
-  const [rotation, setRotation] = useState("");
-  const [diameter, setDiameter] = useState("");
+  const [planet, setPlanet] = useState({});
+  const [loading, setLoading] = useState(true);
   const swapiService = new SwapiService();
+
+  const onPlanetLoaded = (planet) => {
+    setPlanet(planet);
+    setLoading(false);
+  };
 
   useEffect(() => {
     const idLocal = Math.floor(Math.random() * 25) + 2;
     swapiService.getPlanet(idLocal)
-      .then((planet) => {
-        setId(idLocal);
-        setName(planet.name);
-        setPopulation(planet.population);
-        setRotation(planet.rotation_period);
-        setDiameter(planet.diameter);
-      });
+      .then(onPlanetLoaded);
   }, []);
 
+  const spinner = loading ? <Spinner /> : null;
+  const content = loading ? null : <PlanetView planet={planet} />;
   return (
     <div className="random-planet jumbotron rounded">
+      {spinner}
+      {content}
+    </div>
+  );
+}
+
+const PlanetView = ({ planet }) => {
+  const {id, name, population, rotation, diameter} = planet;
+  return (
+    <>
       <img className="planet-image"
         src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`} />
       <div>
@@ -43,6 +52,6 @@ export default function RandomPlanet() {
           </li>
         </ul>
       </div>
-    </div>
+    </>
   );
 }
