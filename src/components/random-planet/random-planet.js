@@ -2,35 +2,57 @@ import React, { useState, useEffect } from 'react';
 import SwapiService from '../../services/swapi-service';
 import './random-planet.css';
 import Spinner from '../spinner';
+import ErrorIndicator from '../error-indicator';
 
 export default function RandomPlanet() {
   const [planet, setPlanet] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const swapiService = new SwapiService();
 
   const onPlanetLoaded = (planet) => {
     setPlanet(planet);
     setLoading(false);
+    setError(false);
   };
 
-  useEffect(() => {
-    const idLocal = Math.floor(Math.random() * 25) + 2;
+  const onError = (err) => {
+    setError(true);
+    setLoading(false);
+  }
+
+  const updatePlanet = () => {
+    console.log('update');
+    const idLocal = Math.floor(Math.random() * 25) + 3;
     swapiService.getPlanet(idLocal)
-      .then(onPlanetLoaded);
+      .then(onPlanetLoaded)
+      .catch(onError);
+  }
+
+  useEffect(() => {
+    const interval = setInterval(updatePlanet, 2500);
+    
+    return () => {
+      clearInterval(interval);
+    }
   }, []);
 
+  const hasData = !loading && !error;
   const spinner = loading ? <Spinner /> : null;
-  const content = loading ? null : <PlanetView planet={planet} />;
+  const errorMessage = error ? <ErrorIndicator /> : null;
+  const content = hasData ? <PlanetView planet={planet} /> : null;
+
   return (
     <div className="random-planet jumbotron rounded">
       {spinner}
+      {errorMessage}
       {content}
     </div>
   );
 }
 
 const PlanetView = ({ planet }) => {
-  const {id, name, population, rotation, diameter} = planet;
+  const { id, name, population, rotation, diameter } = planet;
   return (
     <>
       <img className="planet-image"
