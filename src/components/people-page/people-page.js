@@ -1,30 +1,29 @@
 import React, { useState } from "react";
-import ErrorIndicator from "../error-indicator";
 import ItemList from "../item-list";
-import PersonDetails from "../person-details";
+import ItemDetails from "../item-details";
 import SwapiService from "../../services/swapi-service";
 import Row from '../row';
+import ErrorBoundry from "../error-boundry";
 
 const PeoplePage = () => {
     const swapiService = new SwapiService();
 
-    const [selectedPerson, setSelectedPerson] = useState(null);
+    const [selectedPerson, setSelectedPerson] = useState(5);
 
     const onPersonSelected = (id) => {
         setSelectedPerson(id);
     }
-
-    const hasError = false;
-
-    if (hasError)
-        return (<ErrorIndicator />);
 
     const itemList = <ItemList
         onItemSelected={onPersonSelected}
         getData={swapiService.getAllPeople}
         renderItem={({ name, gender, birthYear }) => `${name} (${gender} ${birthYear})`} />;
 
-    const personDetails = <PersonDetails personId={selectedPerson} />;
+    const personDetails =
+        <ErrorBoundry>
+            <ItemDetails itemId={selectedPerson} />
+        </ErrorBoundry>;
+
     return (
         <Row left={itemList} right={personDetails} />
     );

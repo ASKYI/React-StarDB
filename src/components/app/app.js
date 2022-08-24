@@ -4,15 +4,15 @@ import Header from '../header';
 import RandomPlanet from '../random-planet';
 
 import './app.css';
-import PeoplePage from '../people-page';
 import SwapiService from '../../services/swapi-service';
-import ItemList from "../item-list";
-import PersonDetails from "../person-details";
+import Row from "../row";
+import ItemDetails from "../item-details";
+import { Record } from "../item-details/item-details";
 
 const App = () => {
   const swapiService = new SwapiService();
+  const { getPerson, getStarship, getPersonImage, getStartshipImage, getPlanetImage } = swapiService;
   const [showRandomPlanet, setShowRandomPlanet] = useState(true);
-  const [selectedPerson, setSelectedPerson] = useState(null);
 
   const toggleRandomPlanet = () => {
     setShowRandomPlanet(!showRandomPlanet);
@@ -22,9 +22,25 @@ const App = () => {
     <RandomPlanet /> :
     null;
 
-  const onPersonSelected = (id) => {
-    setSelectedPerson(id);
-  }
+  const personDetails = (
+    <ItemDetails
+      itemId={11}
+      getData={getPerson}
+      getImageUrl={getPersonImage}>
+      <Record field="gender" label="Gender"></Record>
+      <Record field="eyeColor" label="Eye color"></Record>
+    </ItemDetails>
+  );
+  const starshipDetails = (
+    <ItemDetails
+      itemId={5}
+      getData={getStarship}
+      getImageUrl={getStartshipImage}>
+      <Record field="model" label="Model"></Record>
+      <Record field="length" label="Length"></Record>
+      <Record field="costInCredits" label="Cost"></Record>
+    </ItemDetails>
+  );
 
   return (
     <div>
@@ -37,9 +53,12 @@ const App = () => {
         Toggle Random Planet
       </button>
 
-      <PeoplePage />
-
-      <div className="row mb2">
+      {/* <PeoplePage /> */}
+      <Row
+        left={personDetails}
+        right={starshipDetails}
+      />
+      {/* <div className="row mb2">
         <div className="col-md-6">
           <ItemList
             onItemSelected={onPersonSelected}
@@ -47,7 +66,7 @@ const App = () => {
             renderItem={({name, diameter}) => `${name} (${diameter})`} />
         </div>
         <div className="col-md-6">
-          <PersonDetails personId={selectedPerson} />
+          <ItemDetails itemId={selectedPerson} />
         </div>
       </div>
 
@@ -59,9 +78,9 @@ const App = () => {
             renderItem={({name, model}) => `${name} (${model})`} />
         </div>
         <div className="col-md-6">
-          <PersonDetails personId={selectedPerson} />
+          <ItemDetails itemId={selectedPerson} />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

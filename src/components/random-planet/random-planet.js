@@ -22,7 +22,6 @@ export default function RandomPlanet() {
   }
 
   const updatePlanet = () => {
-    console.log('update');
     const idLocal = Math.floor(Math.random() * 25) + 3;
     swapiService.getPlanet(idLocal)
       .then(onPlanetLoaded)
