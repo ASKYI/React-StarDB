@@ -8,6 +8,8 @@ import SwapiService from '../../services/swapi-service';
 import Row from "../row";
 import ItemDetails from "../item-details";
 import { Record } from "../item-details/item-details";
+import { PersonList, PlanetList, StarshipList } from '../sw-components';
+import ErrorBoundry from '../error-boundry';
 
 const App = () => {
   const swapiService = new SwapiService();
@@ -43,22 +45,37 @@ const App = () => {
   );
 
   return (
-    <div>
-      <Header />
-      {planet}
+    <ErrorBoundry>
+      <div className='stardb-app'>
+        <Header />
+        {planet}
 
-      <button
-        className="toggle-planet btn btn-warning btn-lg"
-        onClick={() => toggleRandomPlanet()}>
-        Toggle Random Planet
-      </button>
+        <button
+          className="toggle-planet btn btn-warning btn-lg"
+          onClick={() => toggleRandomPlanet()}>
+          Toggle Random Planet
+        </button>
 
-      {/* <PeoplePage /> */}
-      <Row
+        <PersonList>
+          {({ name }) => <span>{name}</span>}
+        </PersonList>
+
+        <StarshipList>
+          {({ name }) => <span>{name}</span>}
+        </StarshipList>
+
+        <PlanetList>
+          {({ name }) => <span>{name}</span>}
+        </PlanetList>
+
+        {/* <PeoplePage /> */}
+        {/* <Row
         left={personDetails}
         right={starshipDetails}
       />
-      {/* <div className="row mb2">
+      </div>
+       */}
+        {/* <div className="row mb2">
         <div className="col-md-6">
           <ItemList
             onItemSelected={onPersonSelected}
@@ -81,7 +98,8 @@ const App = () => {
           <ItemDetails itemId={selectedPerson} />
         </div>
       </div> */}
-    </div>
+      </div>
+    </ErrorBoundry>
   );
 };
 
