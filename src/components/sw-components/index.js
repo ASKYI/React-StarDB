@@ -12,8 +12,8 @@ import {
 
 export {
     PersonDetails,
-    PlanetDetails,
     StarshipDetails,
+    PlanetDetails,
     PersonList,
     PlanetList,
     StarshipList

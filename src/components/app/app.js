@@ -4,17 +4,16 @@ import Header from '../header';
 import RandomPlanet from '../random-planet';
 
 import './app.css';
-import SwapiService from '../../services/swapi-service';
 import Row from "../row";
-import ItemDetails from "../item-details";
 import { Record } from "../item-details/item-details";
-import { PersonList, PlanetList, StarshipList } from '../sw-components';
+import { PersonDetails, PersonList, PlanetDetails, PlanetList, StarshipDetails, StarshipList } from '../sw-components';
 import ErrorBoundry from '../error-boundry';
 
 const App = () => {
-  const swapiService = new SwapiService();
-  const { getPerson, getStarship, getPersonImage, getStartshipImage, getPlanetImage } = swapiService;
   const [showRandomPlanet, setShowRandomPlanet] = useState(true);
+  const [selectedPerson, setSelectedPerson] = useState(11);
+  const [selectedPlanet, setSelectedPlanet] = useState(5);
+  const [selectedStarship, setSelectedStarship] = useState(5);
 
   const toggleRandomPlanet = () => {
     setShowRandomPlanet(!showRandomPlanet);
@@ -24,24 +23,43 @@ const App = () => {
     <RandomPlanet /> :
     null;
 
+  const qq = (id) => {
+    setSelectedPerson(id);
+  };
+
+  const personList = (
+    <PersonList onItemSelected={qq} />
+  );
+
   const personDetails = (
-    <ItemDetails
-      itemId={11}
-      getData={getPerson}
-      getImageUrl={getPersonImage}>
+    <PersonDetails itemId={selectedPerson}>
       <Record field="gender" label="Gender"></Record>
       <Record field="eyeColor" label="Eye color"></Record>
-    </ItemDetails>
+    </PersonDetails>
   );
+
+  const starshipList = (
+    <StarshipList onItemSelected={(id) => setSelectedStarship(id)}/>
+  );
+
   const starshipDetails = (
-    <ItemDetails
-      itemId={5}
-      getData={getStarship}
-      getImageUrl={getStartshipImage}>
+    <StarshipDetails itemId={selectedStarship}>
       <Record field="model" label="Model"></Record>
       <Record field="length" label="Length"></Record>
       <Record field="costInCredits" label="Cost"></Record>
-    </ItemDetails>
+    </StarshipDetails>
+  );
+
+  const planetList = (
+    <PlanetList onItemSelected={(id) => setSelectedPlanet(id)}/>
+  );
+
+  const planetDetails = (
+    <PlanetDetails itemId={selectedPlanet}>
+      <Record field="population" label="Population"></Record>
+      <Record field="rotationPeriod" label="Rotation"></Record>
+      <Record field="diameter" label="Diameter"></Record>
+    </PlanetDetails>
   );
 
   return (
@@ -56,17 +74,18 @@ const App = () => {
           Toggle Random Planet
         </button>
 
-        <PersonList>
-          {({ name }) => <span>{name}</span>}
-        </PersonList>
-
-        <StarshipList>
-          {({ name }) => <span>{name}</span>}
-        </StarshipList>
-
-        <PlanetList>
-          {({ name }) => <span>{name}</span>}
-        </PlanetList>
+        <Row
+          left={personList}
+          right={personDetails} >
+        </Row>
+        <Row
+          left={starshipList}
+          right={starshipDetails} >
+        </Row>
+        <Row
+          left={planetList}
+          right={planetDetails} >
+        </Row>
 
         {/* <PeoplePage /> */}
         {/* <Row

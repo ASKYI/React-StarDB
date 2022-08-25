@@ -1,14 +1,14 @@
 import SwapiService from "../../services/swapi-service";
-import { withData } from "../hoc-helpers";
+import { withDataById } from "../hoc-helpers";
 import ItemDetails from "../item-details";
 
-const {getPerson, getPlanet, getStarship} = new SwapiService();
+const { getPerson, getPlanet, getStarship, getPersonImage, getPlanetImage, getStartshipImage } = new SwapiService();
 
-const PersonDetails = withData(ItemDetails, getPerson);
-const PlanetDetails = withData(ItemDetails, getPlanet);
-const StarshipDetails = withData(ItemDetails, getStarship);
+const PersonDetails = withDataById(ItemDetails, getPerson, getPersonImage);
+const PlanetDetails = withDataById(ItemDetails, getPlanet, getPlanetImage);
+const StarshipDetails = withDataById(ItemDetails, getStarship, getStartshipImage);
 export {
     PersonDetails,
-    PlanetDetails,
-    StarshipDetails
+    StarshipDetails,
+    PlanetDetails
 }
