@@ -9,7 +9,11 @@ import { Record } from "../item-details/item-details";
 import { PersonDetails, PersonList, PlanetDetails, PlanetList, StarshipDetails, StarshipList } from '../sw-components';
 import ErrorBoundry from '../error-boundry';
 
+import { SwapiServiceProvider } from '../swapi-service-context';
+import SwapiService from '../../services/swapi-service';
+
 const App = () => {
+  const swapiService = new SwapiService();
   const [showRandomPlanet, setShowRandomPlanet] = useState(true);
   const [selectedPerson, setSelectedPerson] = useState(11);
   const [selectedPlanet, setSelectedPlanet] = useState(5);
@@ -23,14 +27,9 @@ const App = () => {
     <RandomPlanet /> :
     null;
 
-  const qq = (id) => {
-    setSelectedPerson(id);
-  };
-
   const personList = (
-    <PersonList onItemSelected={qq} />
+    <PersonList onItemSelected={(id) => setSelectedPerson(id)} />
   );
-
   const personDetails = (
     <PersonDetails itemId={selectedPerson}>
       <Record field="gender" label="Gender"></Record>
@@ -39,9 +38,8 @@ const App = () => {
   );
 
   const starshipList = (
-    <StarshipList onItemSelected={(id) => setSelectedStarship(id)}/>
+    <StarshipList onItemSelected={(id) => setSelectedStarship(id)} />
   );
-
   const starshipDetails = (
     <StarshipDetails itemId={selectedStarship}>
       <Record field="model" label="Model"></Record>
@@ -51,9 +49,8 @@ const App = () => {
   );
 
   const planetList = (
-    <PlanetList onItemSelected={(id) => setSelectedPlanet(id)}/>
+    <PlanetList onItemSelected={(id) => setSelectedPlanet(id)} />
   );
-
   const planetDetails = (
     <PlanetDetails itemId={selectedPlanet}>
       <Record field="population" label="Population"></Record>
@@ -64,60 +61,31 @@ const App = () => {
 
   return (
     <ErrorBoundry>
-      <div className='stardb-app'>
-        <Header />
-        {planet}
+      <SwapiServiceProvider value={swapiService}>
+        <div className='stardb-app'>
+          <Header />
+          {planet}
 
-        <button
-          className="toggle-planet btn btn-warning btn-lg"
-          onClick={() => toggleRandomPlanet()}>
-          Toggle Random Planet
-        </button>
+          <button
+            className="toggle-planet btn btn-warning btn-lg"
+            onClick={() => toggleRandomPlanet()}>
+            Toggle Random Planet
+          </button>
 
-        <Row
-          left={personList}
-          right={personDetails} >
-        </Row>
-        <Row
-          left={starshipList}
-          right={starshipDetails} >
-        </Row>
-        <Row
-          left={planetList}
-          right={planetDetails} >
-        </Row>
-
-        {/* <PeoplePage /> */}
-        {/* <Row
-        left={personDetails}
-        right={starshipDetails}
-      />
-      </div>
-       */}
-        {/* <div className="row mb2">
-        <div className="col-md-6">
-          <ItemList
-            onItemSelected={onPersonSelected}
-            getData={swapiService.getAllPlanets}
-            renderItem={({name, diameter}) => `${name} (${diameter})`} />
+          <Row
+            left={personList}
+            right={personDetails} >
+          </Row>
+          <Row
+            left={starshipList}
+            right={starshipDetails} >
+          </Row>
+          <Row
+            left={planetList}
+            right={planetDetails} >
+          </Row>
         </div>
-        <div className="col-md-6">
-          <ItemDetails itemId={selectedPerson} />
-        </div>
-      </div>
-
-      <div className="row mb2">
-        <div className="col-md-6">
-          <ItemList
-            onItemSelected={onPersonSelected}
-            getData={swapiService.getAllStarships}
-            renderItem={({name, model}) => `${name} (${model})`} />
-        </div>
-        <div className="col-md-6">
-          <ItemDetails itemId={selectedPerson} />
-        </div>
-      </div> */}
-      </div>
+      </SwapiServiceProvider>
     </ErrorBoundry>
   );
 };

@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Spinner from '../spinner';
 
 const withDataById = (View, getData, getImage) => {
@@ -9,17 +9,18 @@ const withDataById = (View, getData, getImage) => {
     const { itemId } = props;
 
     useEffect(() => {
-      if (!itemId) {
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      getData(itemId)
-        .then((data) => {
-          setData(data);
-          setImageUrl(getImage(data));
+      async function fetchData() {
+        if (!itemId) {
           setLoading(false);
-        });
+          return;
+        }
+        setLoading(true);
+        const data = await getData(itemId);
+        setData(data);
+        setImageUrl(getImage(data));
+        setLoading(false);
+      }
+      fetchData();
     }, [itemId]);
 
     if (!data || loading) {
