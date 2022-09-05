@@ -23,7 +23,7 @@ const withDataById = (View, getData, getImage) => {
       fetchData();
     }, [itemId]);
 
-    if (!data || loading) {
+    if (loading) {
       return <Spinner />;
     }
 

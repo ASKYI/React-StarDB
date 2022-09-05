@@ -1,31 +1,27 @@
 import React, { useState } from "react";
-import ItemList from "../item-list";
-import ItemDetails from "../item-details";
-import SwapiService from "../../services/swapi-service";
 import Row from '../row';
-import ErrorBoundry from "../error-boundry";
+import { PersonList } from '../sw-components/item-lists';
+import { PersonDetails } from '../sw-components/details';
+import { Record } from '../item-details/item-details';
 
 const PeoplePage = () => {
-    const swapiService = new SwapiService();
+    const [selectedPerson, setSelectedPerson] = useState(null);
 
-    const [selectedPerson, setSelectedPerson] = useState(5);
-
-    const onPersonSelected = (id) => {
-        setSelectedPerson(id);
-    }
-
-    const itemList = <ItemList
-        onItemSelected={onPersonSelected}
-        getData={swapiService.getAllPeople}
-        renderItem={({ name, gender, birthYear }) => `${name} (${gender} ${birthYear})`} />;
-
-    const personDetails =
-        <ErrorBoundry>
-            <ItemDetails itemId={selectedPerson} />
-        </ErrorBoundry>;
+    const personList = (
+        <PersonList onItemSelected={(id) => setSelectedPerson(id)} />
+    );
+    const personDetails = (
+        <PersonDetails itemId={selectedPerson}>
+            <Record field="gender" label="Gender"></Record>
+            <Record field="eyeColor" label="Eye color"></Record>
+        </PersonDetails>
+    );
 
     return (
-        <Row left={itemList} right={personDetails} />
+        <Row
+            left={personList}
+            right={personDetails} >
+        </Row>
     );
 }
 

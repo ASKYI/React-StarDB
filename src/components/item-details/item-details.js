@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import Spinner from '../spinner';
+import React from 'react';
 import ErrorButton from '../error-button';
 
 import './item-details.css';
@@ -15,6 +14,10 @@ const Record = ({ item, field, label }) => {
 export { Record };
 
 export default function ItemDetails({ data: item, imageUrl, children }) {
+  if (!item) {
+    return <span>Select an item from a list</span>;
+  }
+
   const content = <>
     < img className="item-image"
       src={imageUrl}

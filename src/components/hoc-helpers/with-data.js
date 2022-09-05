@@ -1,9 +1,10 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Spinner from '../spinner';
 
-const withData = (View, getData) => {
+const withData = (View) => {
     return (props) => {
         const [data, setData] = useState(null);
+        const { getData } = props;
 
         useEffect(() => {
             getData()
